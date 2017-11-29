@@ -18,7 +18,7 @@ public class MainActivity extends AppCompatActivity {
         for(int i=1; i<105; i++){
             OutlineTextView textView = new OutlineTextView(this);
             TimeTable.addView(textView);
-            TimeTable.setAlignmentMode();
+            TimeTable.setAlignmentMode()
         }
     }
 

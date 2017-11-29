@@ -33,7 +33,9 @@ public class OutlineTextView extends AppCompatTextView {
             super.onDraw(canvas);
             // getPaint().setStyle(Paint.Style.FILL);
         }
-        super.onDraw(canvas);
+        else {
+            super.onDraw(canvas);
+        }
     }
 
     private void initView(Context context, AttributeSet attrs) {
