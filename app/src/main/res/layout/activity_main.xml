@@ -182,24 +182,7 @@
         android:orientation="horizontal"
         android:columnCount="7">
 
-        <myactivityresult.book.com.mobile_programming.OutlineTextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_columnWeight="1"
-            android:layout_rowWeight="1"
-            OutlineTextView:textStroke = "true"
-            OutlineTextView:textStrokeWidth = "5"
-            android:text="1번"
-            />
 
-        <myactivityresult.book.com.mobile_programming.OutlineTextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_columnWeight="1"
-            android:layout_rowWeight="1"
-            android:text="2번"
-            OutlineTextView:textStroke="true"
-            OutlineTextView:textStrokeWidth="5" />
 
     </GridLayout>
 
