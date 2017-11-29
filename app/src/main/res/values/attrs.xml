@@ -2,6 +2,6 @@
 <resources>
     <declare-styleable name="OutlineTextView">
         <attr name="textStroke" format="boolean"/>
-        <attr name="textStrokeWidth" format="dimension"/>
+        <attr name="textStrokeWidth" format="integer"/>
     </declare-styleable>
 </resources>

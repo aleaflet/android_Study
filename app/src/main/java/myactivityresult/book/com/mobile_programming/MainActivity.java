@@ -15,11 +15,12 @@ public class MainActivity extends AppCompatActivity {
 
         TimeTable = (GridLayout)findViewById(R.id.TimeTable);
 
+        /*
         for(int i=1; i<105; i++){
-            OutlineTextView textView = new OutlineTextView(this);
+            OutlineTextView textView = new OutlineTextView(this, true, 1.0f);
+            textView.setText("번호 : " + i);
             TimeTable.addView(textView);
-            TimeTable.setAlignmentMode();
-        }
+        }*/
     }
 
     // 시간표의 각 칸을 눌렀을 때 호출
