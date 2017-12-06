@@ -51,10 +51,11 @@ public class SQLiteHelper extends SQLiteOpenHelper {
         contentvalues.put(Table.EndTime, end_time);
         contentvalues.put(Table.Content, content);
 
-        String[] whereArgs = new String[] {};
+        String[] whereArgs = new String[] { day };
 
         SQLiteDatabase sqlDB = getWritableDatabase();
-        sqlDB.update(Table.TableName, contentvalues, "", whereArgs);
+        sqlDB.delete(Table.TableName, "where "+ Table.Day + " = ?" ,whereArgs);  // 겹치는 스케줄 삭제
+        sqlDB.insert(Table.TableName, Table.Day, contentvalues);  // 바뀐 스케줄 저장
     }
 
     public Cursor Search(String Day){

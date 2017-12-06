@@ -1,8 +1,10 @@
 package myactivityresult.book.com.mobile_programming;
 
+import android.content.DialogInterface;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.support.annotation.IdRes;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.EditText;
@@ -50,8 +52,7 @@ public class SetScheduleActivity extends AppCompatActivity {
             int temp_end  = cursor.getInt(cursor.getColumnIndex(Table.StartTime));
 
             if( ((StartHour < temp_start) && (temp_start < EndHour)) ||
-                    ((temp_start < StartHour) && (StartHour < temp_end))
-                    ) {
+                    ((temp_start < StartHour) && (StartHour < temp_end)) ) {
                 isOverlap = true;
                 break;
             }
@@ -61,10 +62,27 @@ public class SetScheduleActivity extends AppCompatActivity {
 
     public void save(boolean isOverlap){
         if(isOverlap){  // 중복인데 변경할 것이냐 물어보고 판단
-
+            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+            builder.setTitle("일정 중복");
+            builder.setMessage("일정을 변경하시겠습니까?");
+            builder.setIcon(android.R.drawable.ic_dialog_alert);
+            builder.setPositiveButton("변경", new DialogInterface.OnClickListener(){
+                @Override
+                public void onClick(DialogInterface dialog, int which){
+                    SQLiteHelper sqh = new SQLiteHelper(SetScheduleActivity.this);
+                    sqh.changeSchedule(day, StartHour, EndHour, EdtContent.getText().toString());
+                }
+            });
+            builder.setNegativeButton("취소", new DialogInterface.OnClickListener(){
+                @Override
+                public void onClick(DialogInterface dialog, int which){ }
+            });
+            AlertDialog dialog = builder.create();
+            dialog.show();
         }
         else{    // 디비에 저장
-
+            SQLiteHelper sqh = new SQLiteHelper(SetScheduleActivity.this);
+            sqh.addSchedule(day, StartHour, EndHour, EdtContent.getText().toString());
         }
     }
 }

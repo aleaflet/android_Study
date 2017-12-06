@@ -173,17 +173,16 @@
             android:text="22" />
     </GridLayout>
 
-    <GridLayout
-        android:id="@+id/TimeTable"
+    <GridView
+        android:id="@+id/gridView01"
+        android:layout_below="@+id/dayLIne"
+        android:background="#ff000000"
+        android:layout_toRightOf="@+id/timeLine"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@+id/dayLIne"
-        android:layout_toRightOf="@+id/timeLine"
-        android:orientation="horizontal"
-        android:columnCount="7">
-
-
-
-    </GridLayout>
+        android:numColumns="7"
+        android:stretchMode="columnWidth"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentEnd="true"></GridView>
 
 </RelativeLayout>
