@@ -4,36 +4,23 @@ import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Color;
-import android.graphics.Point;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
-import android.view.Display;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.GridView;
-import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 public class MainActivity extends AppCompatActivity {
     GridView gridView;
-    ScreenRate screen_rate;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
-        /* 디바이스 실제 크기를 가져옴 */
-        Display display = getWindowManager().getDefaultDisplay();
-        Point size = new Point();
-        display.getSize(size);
-        int ScreenWidth = size.x;
-        int ScreenHeight = size.y;
-        screen_rate = new ScreenRate(ScreenWidth, ScreenHeight);
-        screen_rate.setSize(100, 100); // 가상 화면 크기 설정
 
         gridView = (GridView)findViewById(R.id.gridView01);
         gridView.setAdapter(new ImageAdapter(this));
@@ -41,9 +28,8 @@ public class MainActivity extends AppCompatActivity {
         gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                view.setBackgroundColor(Color.BLACK);
-                int color = view.getDrawingCacheBackgroundColor();
-                Log.d("test", ""+color);
+                Toast.makeText(MainActivity.this, position + "번 칸 입니다", Toast.LENGTH_LONG).show();
+                view.setBackgroundColor(Color.BLUE);
 
                 switch (position){
                     case 0 :
@@ -53,14 +39,6 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
         });
-
-        /*
-        for(int i=1; i<105; i++){
-            OutlineTextView textView = new OutlineTextView(this, true, 10.0f);
-            textView.setText("번호 : " + i);
-            TimeTable.addView(textView);
-        }
-        */
 
         Intent intent = new Intent(getApplicationContext(), AlarmService.class);
         startService(intent);
@@ -107,8 +85,6 @@ public class MainActivity extends AppCompatActivity {
     }
 
     class ImageAdapter extends BaseAdapter {
-        private Integer FunctionImage = R.drawable.block;
-
         Context mContext;
 
         public ImageAdapter(Context context){
@@ -117,7 +93,7 @@ public class MainActivity extends AppCompatActivity {
 
         @Override
         public int getCount(){
-            return 105;  // 시간표 총 105칸
+            return 84;  // 시간표 총 84칸
         }
 
         @Override
@@ -132,21 +108,18 @@ public class MainActivity extends AppCompatActivity {
 
         @Override
         public View getView(int position, View convertView, ViewGroup parent){
-            ImageView imageView;
-            if(convertView == null){
-                imageView = new ImageView(mContext);
-                imageView.setLayoutParams(new GridView.LayoutParams( // 아이콘 이미지 영역 size 설정
-                        screen_rate.getX(13), screen_rate.getY(7))); // 화면 비율에 따라서 크기 조절
-                imageView.setScaleType(ImageView.ScaleType.CENTER_CROP); // 이미지 자체 size 조정 및 이동
-                imageView.setPadding(5,7,3,7);  // 상하좌우 여백
-            }
-            else{
-                imageView = (ImageView) convertView;
-            }
+            TextView temp_textView = new TextView(getApplicationContext());
+            temp_textView.setText(position + "번");
+            temp_textView.setTextColor(Color.RED);
+            temp_textView.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
 
-            imageView.setImageResource(FunctionImage);
+            TextView textView2 = (TextView)findViewById(R.id.time);
+            int temp = textView2.getHeight();
 
-            return imageView;
+            temp_textView.setHeight(temp-2);
+            temp_textView.setBackgroundColor(Color.WHITE);
+
+            return temp_textView;
         }
     }
 }
