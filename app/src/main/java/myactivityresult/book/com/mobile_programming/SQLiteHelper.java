@@ -48,9 +48,18 @@ public class SQLiteHelper extends SQLiteOpenHelper {
     public void changeSchedule(String day, int start_time, int end_time, String content){
         SQLiteDatabase sqlDB = getWritableDatabase();
 
-        String[] whereArgs = new String[] { day };
-        sqlDB.execSQL("delete from " + Table.TableName +
-                " where " + Table.Day + " = ?;", whereArgs);  // 겹치는 스케줄 삭제
+        Cursor cursor = Search(day);
+        while(cursor.moveToNext()){
+            int temp_start = cursor.getInt(cursor.getColumnIndex(Table.StartTime));
+            int temp_end  = cursor.getInt(cursor.getColumnIndex(Table.EndTime));
+
+            if( ((start_time < temp_start) && (temp_start < end_time)) ||
+                    ((temp_start < start_time) && (start_time < temp_end)) ) {
+                String[] whereArgs = new String[] { day, String.valueOf(temp_start) };
+                sqlDB.execSQL("delete from " + Table.TableName + " where "
+                        + Table.Day + " = ? , " + Table.StartTime + " = ?;", whereArgs);  // 겹치는 스케줄 삭제
+            }
+        }
 
         addSchedule(day,start_time,end_time,content);  // 바뀐 스케줄 저장
     }

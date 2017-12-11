@@ -52,8 +52,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        int position = 0; //data.getIntExtra("",0);
-        textViews[position].setBackgroundColor(Color.BLUE);
+        int position;
 
         // 디비 전체를 읽어서 저장한 요일에 해당하는 시간의 칸을 색을 바꾸고 내용을 표시
         SQLiteHelper sqh = new SQLiteHelper(MainActivity.this);
@@ -65,7 +64,39 @@ public class MainActivity extends AppCompatActivity {
             String content = cursor.getString(cursor.getColumnIndex(Table.Content));
 
             // day와 time을 index로 시간표 칸을 지정해서 색칠하고 내용을 표시
+            position = getPosition(day, start_time);
+            for(int i=position; i<(position + end_time - start_time); i++) {
+                textViews[i].setBackgroundColor(Color.BLUE);
+                textViews[i].setText(content);
+            }
         }
+    }
+
+    public int getPosition(String day, int start_time){
+        int position;
+
+        if(day.equals("월요일")){
+            position = (start_time - 8) * 7 + 0;  // 텍뷰 행렬의 인덱스가 0번부터 시작하므로
+        }
+        else if(day.equals("화요일")){
+            position = (start_time - 8) * 7 + 1;
+        }
+        else if(day.equals("수요일")){
+            position = (start_time - 8) * 7 + 2;
+        }
+        else if(day.equals("목요일")){
+            position = (start_time - 8) * 7 + 3;
+        }
+        else if(day.equals("금요일")){
+            position = (start_time - 8) * 7 + 4;
+        }
+        else if(day.equals("토요일")){
+            position = (start_time - 8) * 7 + 5;
+        }
+        else{
+            position = (start_time - 8) * 7 + 6;
+        }
+        return position;
     }
 
     @Override

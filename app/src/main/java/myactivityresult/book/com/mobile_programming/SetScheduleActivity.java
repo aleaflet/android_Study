@@ -136,7 +136,7 @@ public class SetScheduleActivity extends AppCompatActivity {
             sqh.addSchedule(day, StartHour, EndHour, EdtContent.getText().toString());
         }
 
-        // finish();  // 저장이 끝나면 해당 액티비티 종료
+        finish();  // 저장이 끝나면 해당 액티비티 종료
     }
 
 }
