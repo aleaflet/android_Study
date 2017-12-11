@@ -46,18 +46,13 @@ public class SQLiteHelper extends SQLiteOpenHelper {
     }
 
     public void changeSchedule(String day, int start_time, int end_time, String content){
-        ContentValues contentvalues = new ContentValues();
-
-        contentvalues.put(Table.Day, day);
-        contentvalues.put(Table.StartTime, start_time);
-        contentvalues.put(Table.EndTime, end_time);
-        contentvalues.put(Table.Content, content);
+        SQLiteDatabase sqlDB = getWritableDatabase();
 
         String[] whereArgs = new String[] { day };
+        sqlDB.execSQL("delete from " + Table.TableName +
+                " where " + Table.Day + " = ?;", whereArgs);  // 겹치는 스케줄 삭제
 
-        SQLiteDatabase sqlDB = getWritableDatabase();
-        sqlDB.delete(Table.TableName, "where "+ Table.Day + " = ?;" ,whereArgs);  // 겹치는 스케줄 삭제
-        sqlDB.insert(Table.TableName, Table.Day, contentvalues);  // 바뀐 스케줄 저장
+        addSchedule(day,start_time,end_time,content);  // 바뀐 스케줄 저장
     }
 
     public Cursor Search(String Day){

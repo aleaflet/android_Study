@@ -11,6 +11,7 @@ import android.database.Cursor;
 import android.graphics.BitmapFactory;
 import android.os.Build;
 import android.os.IBinder;
+import android.support.annotation.Nullable;
 import android.support.v7.app.NotificationCompat;
 import android.util.Log;
 
@@ -18,23 +19,23 @@ import java.util.Calendar;
 
 // 디비를 참고해서 일정 10분 전에 알람
 public class AlarmService extends Service implements Runnable {
-    boolean isRun = true;
+    boolean isRun;
 
-    public IBinder onBind(Intent intent) {
-        Log.d("서비스 =>", "onBind 호출됨");
-        return null;
-    }
+    @Nullable
+    @Override
+    public IBinder onBind(Intent intent) { return null; }
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        Log.d("서비스 =>", "onStartCommand 호출됨");
+        Log.d("test", "서비스 onStartCommand 호출됨");
         return super.onStartCommand(intent, flags, startId);
     }
 
     @Override
     public void onCreate() {
-        Log.d("서비스 =>", "onCreate 호출됨");
-        Thread thread = new Thread();
+        Log.d("test", "서비스 onCreate 호출됨");
+        setIsRun(true);
+        Thread thread = new Thread(this);
         thread.start();
 
         super.onCreate();
@@ -45,27 +46,32 @@ public class AlarmService extends Service implements Runnable {
             while(isRun){
                 // 디비 체크해서 일정 시간을 확인한 후, 알림을 보여줌
                 Calendar now = Calendar.getInstance();
-                int hour = now.get(Calendar.HOUR);
+                int hour = now.get(Calendar.HOUR_OF_DAY);
                 int minute =  now.get(Calendar.MINUTE);
                 String today = getToday();  // 오늘 요일
 
-                SQLiteHelper sqh = new SQLiteHelper(this);
+                Log.d("test", "서비스 오늘 요일 체크 = " + today);
+                SQLiteHelper sqh = new SQLiteHelper(getApplicationContext());
                 Cursor cursor = sqh.Search(today);
                 while(cursor.moveToNext()) {
                     int temp_start = cursor.getInt(cursor.getColumnIndex(Table.StartTime));
 
-                    if (hour == temp_start - 1)   // 10분 전 알림
-                        if(minute == 50)
+                    Log.d("test","현재 시간 : " + hour + "/ 일정 시작 시간 : " + temp_start);
+                    if (hour == (temp_start - 1))   // 10분 전 알림
+                        if(minute == 16)
                             MakeNotification();
                 }
+                try {
+                    Thread.sleep(3000);
+                } catch (InterruptedException e) {
+                }
+            }
+            try {  // 알람 띄우면서 서비스 중지 시키고 1분뒤에 재시작
+                Thread.sleep(60000);
+                setIsRun(true);
+            } catch (InterruptedException e) {
             }
         }
-    }
-
-    @Override
-    public void onDestroy() {
-        Log.d("서비스 =>", "onDestroy 호출됨");
-        super.onDestroy();
     }
 
     public void MakeNotification(){
@@ -97,36 +103,43 @@ public class AlarmService extends Service implements Runnable {
 
     public void setIsRun(boolean run){
         isRun = run;
+        Log.d("test", "서비스 setIsRun 호출, isRun = " + isRun);
     }
 
     public String getToday(){
         Calendar now = Calendar.getInstance();
-        int day = now.get(Calendar.DAY_OF_WEEK);   // 일월화수목금토 = 7654321
+        int day = now.get(Calendar.DAY_OF_WEEK);   // 일월화수목금토 = 1234567
         String today = "";
 
         switch(day){
-            case 7:
+            case 1:
                 today = "일요일";
                 break;
-            case 6:
+            case 2:
                 today = "월요일";
                 break;
-            case 5:
+            case 3:
                 today = "화요일";
                 break;
             case 4:
                 today = "수요일";
                 break;
-            case 3:
+            case 5:
                 today = "목요일";
                 break;
-            case 2:
+            case 6:
                 today = "금요일";
                 break;
-            case 1:
+            case 7:
                 today = "토요일";
                 break;
         }
         return today;
+    }
+
+    @Override
+    public void onDestroy() {
+        Log.d("test", "서비스 onDestroy 호출됨");
+        super.onDestroy();
     }
 }
