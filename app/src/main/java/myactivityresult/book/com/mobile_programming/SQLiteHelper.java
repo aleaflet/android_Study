@@ -5,6 +5,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.util.Log;
 
 public class SQLiteHelper extends SQLiteOpenHelper {
     private static final String DATABASE_NAME = "my_database.db";
@@ -22,6 +23,7 @@ public class SQLiteHelper extends SQLiteOpenHelper {
                 Table.StartTime + " INTEGER, " +
                 Table.EndTime + " INTEGER, " +
                 Table.Content + " TEXT" + ");" );
+        Log.d("test", "SQLite onCreate");
     }
 
     @Override
@@ -54,7 +56,7 @@ public class SQLiteHelper extends SQLiteOpenHelper {
         String[] whereArgs = new String[] { day };
 
         SQLiteDatabase sqlDB = getWritableDatabase();
-        sqlDB.delete(Table.TableName, "where "+ Table.Day + " = ?" ,whereArgs);  // 겹치는 스케줄 삭제
+        sqlDB.delete(Table.TableName, "where "+ Table.Day + " = ?;" ,whereArgs);  // 겹치는 스케줄 삭제
         sqlDB.insert(Table.TableName, Table.Day, contentvalues);  // 바뀐 스케줄 저장
     }
 
@@ -62,14 +64,14 @@ public class SQLiteHelper extends SQLiteOpenHelper {
         SQLiteDatabase sqlDB = getWritableDatabase();
         String[] selectionArgs = new String[] { Day };
         Cursor cursor = sqlDB.rawQuery("select * from " + Table.TableName +
-                " where " + Table.Day + " = ? ", selectionArgs);
+                " where " + Table.Day + " = ?;", selectionArgs);
         return cursor;
     }
 
     public Cursor getSchedule(){
         SQLiteDatabase sqlDB = getWritableDatabase();
         String[] selectionArgs = new String[] { };
-        Cursor cursor = sqlDB.rawQuery("select * from " + Table.TableName, selectionArgs);
+        Cursor cursor = sqlDB.rawQuery("select * from " + Table.TableName + ";", selectionArgs);
         return cursor;
     }
 }

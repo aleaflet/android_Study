@@ -12,10 +12,10 @@ import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.GridView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 public class MainActivity extends AppCompatActivity {
     GridView gridView;
+    TextView[] textViews = new TextView[84];
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -28,8 +28,11 @@ public class MainActivity extends AppCompatActivity {
         gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Toast.makeText(MainActivity.this, position + "번 칸 입니다", Toast.LENGTH_LONG).show();
-                view.setBackgroundColor(Color.BLUE);
+                //Toast.makeText(MainActivity.this, position + "번 칸 입니다", Toast.LENGTH_LONG).show();
+                //view.setBackgroundColor(Color.BLUE);
+
+                Intent intent = new Intent(getApplicationContext(), SetScheduleActivity.class);
+                startActivityForResult(intent, 0);
 
                 switch (position){
                     case 0 :
@@ -44,22 +47,11 @@ public class MainActivity extends AppCompatActivity {
         startService(intent);
     }
 
-    // 시간표의 빈 칸을 눌렀을 때 호출
-    public void SetSchedule(View v){
-        // 새로운 액티비티 화면을 띄워줌
-        Intent intent = new Intent(getApplicationContext(), SetScheduleActivity.class);
-        startActivityForResult(intent, 0);
-    }
-
-    // 시간표의 색칠된 칸을 눌렀을 때 호출
-    public void ViewSchedule(View v){
-        String content = "";
-        Toast.makeText(MainActivity.this, "일정 : " + content, Toast.LENGTH_LONG).show();
-    }
-
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
+        int position = 0; //data.getIntExtra("",0);
+        textViews[position].setBackgroundColor(Color.BLUE);
 
         // 디비 전체를 읽어서 저장한 요일에 해당하는 시간의 칸을 색을 바꾸고 내용을 표시
         SQLiteHelper sqh = new SQLiteHelper(MainActivity.this);
@@ -119,6 +111,7 @@ public class MainActivity extends AppCompatActivity {
             temp_textView.setHeight(temp-2);
             temp_textView.setBackgroundColor(Color.WHITE);
 
+            textViews[position] = temp_textView;
             return temp_textView;
         }
     }

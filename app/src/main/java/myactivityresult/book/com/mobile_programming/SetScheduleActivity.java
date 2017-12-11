@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.support.annotation.IdRes;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.RadioButton;
@@ -20,25 +21,28 @@ public class SetScheduleActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_set_schedule);
-    }
 
-    public void SaveSchedule(View v){
-        // 요일과 시간을 설정
         RadioGroup rg = (RadioGroup) findViewById(R.id.group);
         rg.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(RadioGroup radioGroup, @IdRes int checkID) {
                 RadioButton radio = (RadioButton) findViewById(checkID);
                 day = radio.getText().toString();
+                Log.d("test", "라디오 요일 클릭 : " + day);
             }
         });
+    }
 
+    public void SaveSchedule(View v){
+        // 요일과 시간을 설정
         EdtStartHour = (EditText)findViewById(R.id.StartHour);
         EdtEndHour = (EditText)findViewById(R.id.EndHour);
         EdtContent = (EditText)findViewById(R.id.content);
         StartHour = Integer.parseInt(EdtStartHour.getText().toString());
         EndHour = Integer.parseInt(EdtEndHour.getText().toString());
 
+        Log.d("test", "SaveSchedule 실행, 요일 : " + day + "/시작시간 : " + StartHour +
+                "/종료시간 : " + EndHour + "/내용 : " + EdtContent.getText().toString());
         checkOverlap(StartHour, EndHour);
     }
 
@@ -57,6 +61,7 @@ public class SetScheduleActivity extends AppCompatActivity {
                 break;
             }
         }
+        Log.d("test", "checkOverlap");
         save(isOverlap);
     }
 
@@ -84,5 +89,8 @@ public class SetScheduleActivity extends AppCompatActivity {
             SQLiteHelper sqh = new SQLiteHelper(SetScheduleActivity.this);
             sqh.addSchedule(day, StartHour, EndHour, EdtContent.getText().toString());
         }
+
+        finish();  // 저장이 끝나면 해당 액티비티 종료
     }
+
 }
