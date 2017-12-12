@@ -20,7 +20,6 @@ import android.widget.Toast;
 public class MainActivity extends AppCompatActivity {
     GridView gridView;
     TextView[] textViews = new TextView[84];
-    MainThread thread;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -62,11 +61,6 @@ public class MainActivity extends AppCompatActivity {
         Intent intent = new Intent(getApplicationContext(), AlarmService.class);
         startService(intent);
         Log.d("test","서비스 실행");
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
 
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle("어서오세요");
@@ -75,8 +69,7 @@ public class MainActivity extends AppCompatActivity {
         builder.setPositiveButton("실행", new DialogInterface.OnClickListener(){
             @Override
             public void onClick(DialogInterface dialog, int which){
-                thread = new MainThread(getApplicationContext(), textViews);
-                thread.start();
+                painting();
             }
         });
         builder.setNegativeButton("종료", new DialogInterface.OnClickListener(){
@@ -89,19 +82,66 @@ public class MainActivity extends AppCompatActivity {
         dialog.show();
     }
 
-    @Override
-    protected void onStop() {
-        thread.interrupt();
-        super.onStop();
+    public void painting(){
+        int position;
+
+        for(int i=0; i<=83; i++){
+            textViews[i].setBackgroundColor(Color.WHITE);
+        }
+
+        // 디비 전체를 읽어서 저장한 요일에 해당하는 시간의 칸을 색을 바꾸고 내용을 표시
+        SQLiteHelper sqh = new SQLiteHelper(MainActivity.this);
+        Cursor cursor = sqh.getSchedule();
+        while (cursor.moveToNext()) {
+            String day = cursor.getString(cursor.getColumnIndex(Table.Day));
+            int start_time = cursor.getInt(cursor.getColumnIndex(Table.StartTime));
+            int end_time = cursor.getInt(cursor.getColumnIndex(Table.EndTime));
+            String content = cursor.getString(cursor.getColumnIndex(Table.Content));
+
+            // day와 time을 index로 시간표 칸을 지정해서 색칠하고 내용을 표시
+            position = getPosition(day, start_time);
+            // Log.d("시작",+start_time+"끝"+end_time );
+            for(int i=position; i<=(end_time - start_time)*7+position; i=i+7) {
+                textViews[i].setBackgroundColor(Color.BLUE);
+                textViews[i].setText(content);
+            }
+        }
     }
 
-    /*
+    public int getPosition(String day, int start_time){
+        int position;
+
+        if(day.equals("월요일")){
+            position = (start_time - 8) * 7 + 0;  // 텍뷰 행렬의 인덱스가 0번부터 시작하므로
+        }
+        else if(day.equals("화요일")){
+            position = (start_time - 8) * 7 + 1;
+        }
+        else if(day.equals("수요일")){
+            position = (start_time - 8) * 7 + 2;
+        }
+        else if(day.equals("목요일")){
+            position = (start_time - 8) * 7 + 3;
+        }
+        else if(day.equals("금요일")){
+            position = (start_time - 8) * 7 + 4;
+        }
+        else if(day.equals("토요일")){
+            position = (start_time - 8) * 7 + 5;
+        }
+        else{
+            position = (start_time - 8) * 7 + 6;
+        }
+        return position;
+    }
+
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        MainThread.painting();
-    }*/
+        painting();
+    }
 
     public int getTime(int position){
         int temp = position / 7;

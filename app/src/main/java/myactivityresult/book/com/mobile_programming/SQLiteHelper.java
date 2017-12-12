@@ -53,11 +53,11 @@ public class SQLiteHelper extends SQLiteOpenHelper {
             int temp_start = cursor.getInt(cursor.getColumnIndex(Table.StartTime));
             int temp_end  = cursor.getInt(cursor.getColumnIndex(Table.EndTime));
 
-            if( ((start_time < temp_start) && (temp_start < end_time)) ||
-                    ((temp_start < start_time) && (start_time < temp_end)) ) {
+            if( ((start_time <= temp_start) && (temp_start <= end_time)) ||
+                    ((temp_start <= start_time) && (start_time <= temp_end)) ) {
                 String[] whereArgs = new String[] { day, String.valueOf(temp_start) };
                 sqlDB.execSQL("delete from " + Table.TableName + " where "
-                        + Table.Day + " = ? , " + Table.StartTime + " = ?;", whereArgs);  // 겹치는 스케줄 삭제
+                        + Table.Day + " = ? AND " + Table.StartTime + " = ?;", whereArgs);  // 겹치는 스케줄 삭제
             }
         }
 
