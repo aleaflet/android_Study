@@ -9,7 +9,6 @@ import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.NumberPicker;
-import android.widget.Toast;
 
 public class SetScheduleActivity extends AppCompatActivity {
     String day;
@@ -36,7 +35,6 @@ public class SetScheduleActivity extends AppCompatActivity {
         picker1.setOnValueChangedListener(new NumberPicker.OnValueChangeListener() {
             @Override
             public void onValueChange(NumberPicker picker, int oldVal, int newVal) {
-                Toast.makeText(SetScheduleActivity.this, "Value : " + newVal, Toast.LENGTH_SHORT).show();
                 StartHour = newVal;
 
                 picker2.setMinValue(StartHour+1 );

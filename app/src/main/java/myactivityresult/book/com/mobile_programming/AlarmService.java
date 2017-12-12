@@ -50,15 +50,15 @@ public class AlarmService extends Service implements Runnable {
                 int minute =  now.get(Calendar.MINUTE);
                 String today = getToday();  // 오늘 요일
 
-                Log.d("test", "서비스 오늘 요일 체크 = " + today);
+                // Log.d("test", "서비스 오늘 요일 체크 = " + today);
                 SQLiteHelper sqh = new SQLiteHelper(getApplicationContext());
                 Cursor cursor = sqh.Search(today);
                 while(cursor.moveToNext()) {
                     int temp_start = cursor.getInt(cursor.getColumnIndex(Table.StartTime));
 
-                    Log.d("test","현재 시간 : " + hour + "/ 일정 시작 시간 : " + temp_start);
+                    // Log.d("test","현재 시간 : " + hour + "/ 일정 시작 시간 : " + temp_start);
                     if (hour == (temp_start - 1))   // 10분 전 알림
-                        if(minute == 16)
+                        if(minute == 50)
                             MakeNotification();
                 }
                 try {

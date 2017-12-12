@@ -71,13 +71,6 @@ public class SQLiteHelper extends SQLiteOpenHelper {
                 " where " + Table.Day + " = ?;", selectionArgs);
         return cursor;
     }
-    public Cursor Search(String Day, int start_time){
-        SQLiteDatabase sqlDB = getWritableDatabase();
-        String[] selectionArgs = new String[] { Day, String.valueOf(start_time) };
-        Cursor cursor = sqlDB.rawQuery("select * from " + Table.TableName +
-                " where " + Table.Day + " = ? AND " + Table.StartTime + " = ?;", selectionArgs);
-        return cursor;
-    }
 
     public Cursor getSchedule(){
         SQLiteDatabase sqlDB = getWritableDatabase();
