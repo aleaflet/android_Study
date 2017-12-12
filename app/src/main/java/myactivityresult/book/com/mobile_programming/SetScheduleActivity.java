@@ -139,7 +139,9 @@ public class SetScheduleActivity extends AppCompatActivity {
             SQLiteHelper sqh = new SQLiteHelper(SetScheduleActivity.this);
             sqh.addSchedule(day, StartHour, EndHour, EdtContent.getText().toString());
         }
-
     }
 
+    public void End(View v){
+        finish();
+    }
 }

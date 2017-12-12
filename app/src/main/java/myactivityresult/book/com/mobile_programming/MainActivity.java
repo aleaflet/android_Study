@@ -55,6 +55,10 @@ public class MainActivity extends AppCompatActivity {
         startService(intent);
         Log.d("test","서비스 실행");
 
+        try {
+            Thread.sleep(5000);
+        } catch (InterruptedException e) {
+        }
         painting();
     }
 
@@ -225,7 +229,9 @@ public class MainActivity extends AppCompatActivity {
             temp_textView.setHeight(temp-2);
             temp_textView.setBackgroundColor(Color.WHITE);
 
-            textViews[position] = temp_textView;
+            if(textViews[position] != null) {
+                textViews[position] = temp_textView;
+            }
             return temp_textView;
         }
     }

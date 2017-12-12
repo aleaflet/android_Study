@@ -90,6 +90,14 @@
             android:onClick="SaveSchedule"
             android:layout_alignParentBottom="true"
             android:layout_alignParentEnd="true" />
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_toStartOf="@+id/SaveButton"
+            android:text="종료"
+            android:onClick="End"/>
     </RelativeLayout>
 
 </LinearLayout>
